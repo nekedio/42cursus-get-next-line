@@ -10,5 +10,11 @@ gcr1:	gc
 gcr2:	gc
 	./a.out fixtures/ex2
 
+gcr3:	gc
+	./a.out fixtures/ex3
+
+gcr4:	gc
+	./a.out fixtures/ex4
+
 r:
 	./a.out

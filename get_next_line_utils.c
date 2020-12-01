@@ -6,11 +6,63 @@
 /*   By: dxenophi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 18:52:58 by dxenophi          #+#    #+#             */
-/*   Updated: 2020/11/30 21:32:47 by dxenophi         ###   ########.fr       */
+/*   Updated: 2020/12/01 20:02:49 by dxenophi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+static size_t		ft_strlen(const char *src)
+{
+	char			*ft_src;
+	size_t			i;
+
+	i = 0;
+	ft_src = (char *)src;
+	while (ft_src[i] != '\0')
+	{
+		i++;
+	}
+	return (i);
+}
+
+static char				*ft_strdup(const char *str)
+{
+	char			*result;
+
+	result = (char *)malloc(ft_strlen(str) + 1);
+	if (!result)
+		return (NULL);
+	ft_strlcpy(result, str, ft_strlen(str) + 1);
+	return (result);
+}
+
+char				*ft_substr(char const *str, unsigned int start, size_t len)
+{
+	char			*result;
+	size_t			i;
+	size_t			j;
+	unsigned int	str_len;
+
+	if (!str)
+		return (NULL);
+	str_len = ft_strlen(str);
+	if (start > str_len)
+		return (ft_strdup(""));
+	result = (char *)malloc(sizeof(*result) * (len + 1));
+	if (!result)
+		return (NULL);
+	i = 0;
+	j = start;
+	while (str[i] != '\0' && str_len > j && i < len)
+	{
+		result[i] = str[j];
+		i++;
+		j++;
+	}
+	result[i] = '\0'; //
+	return (result);
+}
 
 static void			*ft_bzero(void *arr, size_t size)
 {
@@ -45,19 +97,6 @@ void		*ft_calloc(size_t count, size_t size)
 	return (result);
 }
 
-static size_t		ft_strlen(const char *src)
-{
-	char			*ft_src;
-	size_t			i;
-
-	i = 0;
-	ft_src = (char *)src;
-	while (ft_src[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
-}
 
 size_t		ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
@@ -79,16 +118,6 @@ size_t		ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	return (len_src);
 }
 
-char				*ft_strdup(const char *str)
-{
-	char			*result;
-
-	result = (char *)malloc(ft_strlen(str) + 1);
-	if (!result)
-		return (NULL);
-	ft_strlcpy(result, str, ft_strlen(str) + 1);
-	return (result);
-}
 
 static char			*genstr(char *dst, char const *srt, unsigned int *counter)
 {
@@ -103,7 +132,7 @@ static char			*genstr(char *dst, char const *srt, unsigned int *counter)
 		i++;
 		j++;
 	}
-	dst[j] = '\0';
+	dst[j] = '*'; //
 	*counter = j;
 	return (dst);
 }

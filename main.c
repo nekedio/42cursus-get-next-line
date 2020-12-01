@@ -6,7 +6,7 @@
 /*   By: dxenophi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 17:52:43 by dxenophi          #+#    #+#             */
-/*   Updated: 2020/11/30 21:17:51 by dxenophi         ###   ########.fr       */
+/*   Updated: 2020/12/01 16:41:43 by dxenophi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 int	main(int argc, char **argv)
 {
 	int i;
+	int j;
 	int fd;
 	char *line;
 
@@ -35,7 +36,12 @@ int	main(int argc, char **argv)
 		while (i < argc)
 		{
 			fd = open(argv[i], O_RDONLY);
-			get_next_line(fd, &line);
+			j = 0;
+			while (j < 10)
+			{
+				get_next_line(fd, &line);
+				j++;
+			}
 			//printf("%s\n", line);
 			i++;
 		}
