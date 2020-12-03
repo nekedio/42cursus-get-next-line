@@ -16,5 +16,8 @@ gcr3:	gc
 gcr4:	gc
 	./a.out fixtures/ex4
 
+gcr5:	gc
+	./a.out fixtures/ex5
+
 r:
 	./a.out

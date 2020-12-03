@@ -38,10 +38,12 @@ int	main(int argc, char **argv)
 		{
 			fd = open(argv[i], O_RDONLY);
 			j = 0;
-			while (mark)
+            mark = 1;
+            while (mark != 0)
 			{
 				mark = get_next_line(fd, &line);
-			    printf("%s\n", line);
+			    printf("     > %s\n", line);
+                printf("----------\n");
 			}
 			i++;
 		}

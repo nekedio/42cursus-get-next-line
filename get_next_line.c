@@ -13,19 +13,38 @@
 #include "get_next_line.h"
 #include <stdio.h> //
 
-static int get_nul_term(char *buf)
+static int get_pos_new_line(char *buf, int len)
 {
 	int i;
 
 	i = 0;
-	while (i < BUFFER_SIZE)
+	while (i < len)
 	{
 		if (buf[i] == '\n')
-			return i;
-		i++;
+        {
+            return i;
+        }
+        i++;
 	}
 	return i;
 }
+
+/* static int get_pos_new_line(char *buf, int len) */
+/* { */
+/* 	int i; */
+/*  */
+/* 	i = 0; */
+/* 	while (i < len) */
+/* 	{ */
+/* 		if (buf[i] == '\n' && i != len - 1) */
+/*         { */
+/* 			//printf("---%d\n", len); */
+/*             return i; */
+/*         } */
+/*         i++; */
+/* 	} */
+/* 	return 0; */
+/* } */
 
 static size_t		ft_strlen(const char *src)
 {
@@ -123,46 +142,89 @@ static char				*ft_substr(char const *str, unsigned int start, size_t len)
 	return (result);
 }
 
-static int get_str(int fd, char **line)
+int get_next_line(int fd, char **line)
 {
 	
-	char buf[BUFFER_SIZE];
+	char buf[BUFFER_SIZE + 1];
 	static char *s_buf;
 	int str_len;
 	int i;
     int mark;
+    int isset_buf;
 
-	i = 0;
-	str_len = BUFFER_SIZE;
+	isset_buf = 0;
+    i = 0;
+	//str_len = BUFFER_SIZE;
 
 	*line = ft_calloc(sizeof(char), 1);
 	/* if (s_buf == NULL) */
     /*     printf("!!! %s !!!\n", s_buf); // */
 	//s_buf = "1";
-	while (str_len >= BUFFER_SIZE)
+    mark = BUFFER_SIZE;
+	while (mark > 0)
 	{
-		if (read(fd, buf, BUFFER_SIZE) == 0)
-            mark = 0;
+        printf("\n%d ---\n", i);
+        printf("buf = %s\n", buf);
+        //mark = read(fd, buf, BUFFER_SIZE);
+        //buf[mark] = '\0';
+        //printf("!%s!\n", buf);
+        //printf("!%d!\n", mark);
+        /* if (mark == 0) */
+        /*     return (0); */
+        //printf("!");
         //printf("!!! %d !!!\n", mark); 
-		str_len = get_nul_term(buf);
-		//printf("%d\n", str_len); //
+		
+        
+        str_len = get_pos_new_line(buf, mark);
+        printf("!%d!\n", str_len);
+        if (str_len < mark)
+        {
+            printf("+");
+            s_buf = ft_substr(buf, str_len + 1, BUFFER_SIZE - str_len);
+            printf("line = %s\n", *line);
+            printf("s_buf = %s\n", s_buf);
+        }
 
-		*line = ft_calloc(sizeof(char), str_len);
-		ft_strlcpy(*line, buf, str_len + 1);
-		*line = ft_strjoin(s_buf, *line);
-		//printf("%s\n", *line);
-		i++;
-        if (mark == 0)
-            return (0);
-	}
-	s_buf = ft_substr(buf, str_len + 1, BUFFER_SIZE - str_len);
-	//printf("!!! %s !!!\n", s_buf); //	
-}
+        if (mark < BUFFER_SIZE)
+        {
+            *line = ft_strjoin(*line, buf);
+        }
 
-int get_next_line(int fd, char **line)
-{
-	int result = 0;
-	
-	result = get_str(fd, line);
-	return (result);
+        //str_len = get_pos_new_line(buf);
+        if (mark == BUFFER_SIZE)
+        {
+            *line = ft_strjoin(*line, buf);
+            isset_buf = 0;
+        }
+        
+        mark = read(fd, buf, BUFFER_SIZE);
+        buf[mark] = '\0';
+
+        //i++;
+        //printf("!%d!\n", str_len);
+		//buf[BUFFER_SIZE] = '\0';
+        //printf("%d\n", str_len); //
+
+        //s_buf = ft_substr(buf, str_len + 1, BUFFER_SIZE - str_len);
+		//*line = ft_calloc(sizeof(char), str_len);
+		//if (mark != 0)
+        //{
+        //ft_strlcpy(*line, buf, str_len + 1);
+            //(*line)[str_len] = '*';
+		//*line = ft_strjoin(s_buf, *line);
+        
+        //}
+        //printf("!!!%s!!!\n", *line);
+		//printf("!!! %s !!!\n", *line);
+	    //printf("!");	
+        //s_buf = ft_substr(buf, str_len + 1, BUFFER_SIZE - str_len);
+        
+        /* if (mark == 0) */
+        /*     return (0); */
+	    i++;
+    }
+    //s_buf = ft_substr(buf, str_len + 1, BUFFER_SIZE - str_len);
+    //printf("///////////");
+    return (0);
+    //printf("!!! %s !!!\n", s_buf); //	
 }
