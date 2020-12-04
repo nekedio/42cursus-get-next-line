@@ -6,28 +6,12 @@
 /*   By: dxenophi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 18:27:21 by dxenophi          #+#    #+#             */
-/*   Updated: 2020/12/01 20:18:25 by dxenophi         ###   ########.fr       */
+/*   Updated: 2020/12/04 21:23:28 by dxenophi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h> //
-
-static int get_pos_new_line(char *buf, int len)
-{
-	int i;
-
-	i = 0;
-	while (i < len)
-	{
-		if (buf[i] == '\n')
-        {
-            return i;
-        }
-        i++;
-	}
-	return i;
-}
 
 /* static int get_pos_new_line(char *buf, int len) */
 /* { */
@@ -36,15 +20,36 @@ static int get_pos_new_line(char *buf, int len)
 /* 	i = 0; */
 /* 	while (i < len) */
 /* 	{ */
-/* 		if (buf[i] == '\n' && i != len - 1) */
+/* 		if (buf[i] == '\n') */
 /*         { */
-/* 			//printf("---%d\n", len); */
 /*             return i; */
 /*         } */
 /*         i++; */
 /* 	} */
-/* 	return 0; */
+/* 	return i; */
 /* } */
+
+char		*ft_strchr(const char *str, int chr)
+{
+	char	*ft_str;
+	int		i;
+
+	ft_str = (char *)str;
+	i = 0;
+	while (ft_str[i])
+	{
+		if (ft_str[i] == chr)
+		{
+			return (ft_str + i);
+		}
+		i++;
+	}
+	if (ft_str[i] == '\0' && chr == '\0')
+	{
+		return (ft_str + i);
+	}
+	return (NULL);
+}
 
 static size_t		ft_strlen(const char *src)
 {
@@ -84,16 +89,16 @@ static char				*ft_strjoin(char const *s_buf, char const *str2)
 	char			*result;
 	unsigned int	counter;
 
-	/* if (!s_buf || !str2) */
-	/* 	return (NULL); */
+	if (!s_buf || !str2)
+		return (NULL);
 
-    if (s_buf == NULL)
-    {
-        result = (char *)malloc(sizeof(result) * ft_strlen(str2) + 1);
-	    counter = 0;
-	    result = genstr(result, str2, &counter);
-        return (result);
-    }
+    /* if (s_buf == NULL) */
+    /* { */
+    /*     result = (char *)malloc(sizeof(result) * ft_strlen(str2) + 1); */
+	/*     counter = 0; */
+	/*     result = genstr(result, str2, &counter); */
+    /*     return (result); */
+    /* } */
     sum_str = ft_strlen(s_buf) + ft_strlen(str2);
 	result = (char *)malloc(sizeof(result) * sum_str + 1);
 	if (!result || !s_buf || !str2)
@@ -115,116 +120,120 @@ static char		*ft_strdup(const char *str)
 	return (result);
 }
 
-static char				*ft_substr(char const *str, unsigned int start, size_t len)
-{
-	char			*result;
-	size_t			i;
-	size_t			j;
-	unsigned int	str_len;
+/* static char				*ft_substr(char const *str, unsigned int start, size_t len) */
+/* { */
+/* 	char			*result; */
+/* 	size_t			i; */
+/* 	size_t			j; */
+/* 	unsigned int	str_len; */
+/*  */
+/* 	if (!str) */
+/* 		return (NULL); */
+/* 	str_len = ft_strlen(str); */
+/* 	if (start > str_len) */
+/* 		return (ft_strdup("")); */
+/* 	result = (char *)malloc(sizeof(*result) * (len + 1)); */
+/* 	if (!result) */
+/* 		return (NULL); */
+/* 	i = 0; */
+/* 	j = start; */
+/* 	while (str[i] != '\0' && str_len > j && i < len) */
+/* 	{ */
+/* 		result[i] = str[j]; */
+/* 		i++; */
+/* 		j++; */
+/* 	} */
+/* 	result[i] = '\0'; */
+/* 	return (result); */
+/* } */
 
-	if (!str)
-		return (NULL);
-	str_len = ft_strlen(str);
-	if (start > str_len)
-		return (ft_strdup(""));
-	result = (char *)malloc(sizeof(*result) * (len + 1));
-	if (!result)
-		return (NULL);
-	i = 0;
-	j = start;
-	while (str[i] != '\0' && str_len > j && i < len)
+void	ft_strclr(char *s)
+{
+	if (s)
 	{
-		result[i] = str[j];
-		i++;
-		j++;
+		while (*s)
+		{
+			*s = '\0';
+			s++;
+		}
 	}
-	result[i] = '\0';
-	return (result);
+}
+
+char	*my_strcpy(char *dst, const char *src)
+{
+	int i;
+
+	i = 0;
+	while (src[i])
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	dst[i] = '\0';
+	return (dst);
 }
 
 int get_next_line(int fd, char **line)
 {
-	
 	char buf[BUFFER_SIZE + 1];
+	int len_read;
+	char *after_new_line;
 	static char *s_buf;
-	int str_len;
-	int i;
-    int mark;
-    int isset_buf;
+	char *after_new_line1;
+	int new_line_in_buf;
+	char *temp;
 
-	isset_buf = 0;
-    i = 0;
-	//str_len = BUFFER_SIZE;
+	if (BUFFER_SIZE < 1)
+		return (-1);
 
-	*line = ft_calloc(sizeof(char), 1);
-	/* if (s_buf == NULL) */
-    /*     printf("!!! %s !!!\n", s_buf); // */
-	//s_buf = "1";
-    mark = BUFFER_SIZE;
-	while (mark > 0)
+	new_line_in_buf = 0;
+	len_read = BUFFER_SIZE;
+	if (s_buf)
 	{
-        printf("\n%d ---\n", i);
-        printf("buf = %s\n", buf);
-        //mark = read(fd, buf, BUFFER_SIZE);
-        //buf[mark] = '\0';
-        //printf("!%s!\n", buf);
-        //printf("!%d!\n", mark);
-        /* if (mark == 0) */
-        /*     return (0); */
-        //printf("!");
-        //printf("!!! %d !!!\n", mark); 
+		after_new_line1 = ft_strchr(s_buf, '\n');
+		//printf("s_buf = %s\n", s_buf);
+		//printf("s_buf = %s\n", after_new_line1);
+		if (after_new_line1)
+		{
+			*after_new_line1 = '\0';
+			*line  = ft_strdup(s_buf);
+			//printf("!%s = %zu!\n", s_buf, ft_strlen(s_buf));
+			ft_strlcpy(s_buf, after_new_line1 + 1, ft_strlen(after_new_line1 + 1) + 1);
+			//my_strcpy(s_buf, after_new_line1 + 1);
+			new_line_in_buf = 1;
+		}
+		else
+		{
+			*line  = ft_strdup(s_buf);
+			free(s_buf);
+			s_buf = NULL;
+		}
+	}
+	else
+	{
+		*line = ft_calloc(sizeof(char), 1); 
+	}
+
+
+	while (len_read > 0 && new_line_in_buf == 0)
+	{
+		len_read = read(fd, buf, BUFFER_SIZE);
+		if (len_read < 1)
+			return (len_read);
+		buf[len_read] = '\0';
 		
-        
-        str_len = get_pos_new_line(buf, mark);
-        printf("!%d!\n", str_len);
-        if (str_len < mark)
-        {
-            printf("+");
-            s_buf = ft_substr(buf, str_len + 1, BUFFER_SIZE - str_len);
-            printf("line = %s\n", *line);
-            printf("s_buf = %s\n", s_buf);
-        }
-
-        if (mark < BUFFER_SIZE)
-        {
-            *line = ft_strjoin(*line, buf);
-        }
-
-        //str_len = get_pos_new_line(buf);
-        if (mark == BUFFER_SIZE)
-        {
-            *line = ft_strjoin(*line, buf);
-            isset_buf = 0;
-        }
-        
-        mark = read(fd, buf, BUFFER_SIZE);
-        buf[mark] = '\0';
-
-        //i++;
-        //printf("!%d!\n", str_len);
-		//buf[BUFFER_SIZE] = '\0';
-        //printf("%d\n", str_len); //
-
-        //s_buf = ft_substr(buf, str_len + 1, BUFFER_SIZE - str_len);
-		//*line = ft_calloc(sizeof(char), str_len);
-		//if (mark != 0)
-        //{
-        //ft_strlcpy(*line, buf, str_len + 1);
-            //(*line)[str_len] = '*';
-		//*line = ft_strjoin(s_buf, *line);
-        
-        //}
-        //printf("!!!%s!!!\n", *line);
-		//printf("!!! %s !!!\n", *line);
-	    //printf("!");	
-        //s_buf = ft_substr(buf, str_len + 1, BUFFER_SIZE - str_len);
-        
-        /* if (mark == 0) */
-        /*     return (0); */
-	    i++;
-    }
-    //s_buf = ft_substr(buf, str_len + 1, BUFFER_SIZE - str_len);
-    //printf("///////////");
-    return (0);
-    //printf("!!! %s !!!\n", s_buf); //	
+		after_new_line = ft_strchr(buf, '\n');
+		if (after_new_line)
+		{
+			*after_new_line = '\0';
+			new_line_in_buf = 1;
+			s_buf = ft_strdup(after_new_line + 1);
+		}
+		
+		temp = *line;	
+		*line = ft_strjoin(*line, buf);
+		free(temp);
+	}
+	return (1);
 }
+
