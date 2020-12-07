@@ -6,7 +6,7 @@
 /*   By: dxenophi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 17:52:43 by dxenophi          #+#    #+#             */
-/*   Updated: 2020/12/04 21:20:04 by dxenophi         ###   ########.fr       */
+/*   Updated: 2020/12/05 15:22:00 by dxenophi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,13 @@ int	main(int argc, char **argv)
 	i = 1;
 	if (argc < 2)
 	{
-		get_next_line(1, &line);
-		printf("     > %s\n", line);
+		gnl = 1;
+		while (gnl)
+		{
+			gnl = get_next_line(1, &line);
+			printf("     > %s\n", line);
+			printf("> %d\n", gnl);
+		}
 	}
 	else
 	{
@@ -100,7 +105,7 @@ int	main(int argc, char **argv)
 				gnl = get_next_line(fd, &line);
 				printf("> %s\n", line);
 				//printf("> %d\n", gnl);
-				//free(line);
+				free(line);
 			}
 		
 			/* gnl0 = get_next_line(fd, &line); 	 */

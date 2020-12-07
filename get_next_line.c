@@ -6,7 +6,7 @@
 /*   By: dxenophi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 18:27:21 by dxenophi          #+#    #+#             */
-/*   Updated: 2020/12/04 21:23:28 by dxenophi         ###   ########.fr       */
+/*   Updated: 2020/12/07 16:03:16 by dxenophi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,7 @@ char	*my_strcpy(char *dst, const char *src)
 int get_next_line(int fd, char **line)
 {
 	char buf[BUFFER_SIZE + 1];
+	//char *buf;
 	int len_read;
 	char *after_new_line;
 	static char *s_buf;
@@ -186,6 +187,7 @@ int get_next_line(int fd, char **line)
 	if (BUFFER_SIZE < 1)
 		return (-1);
 
+	//buf = (char *)malloc(sizeof(buf) * (BUFFER_SIZE + 1));
 	new_line_in_buf = 0;
 	len_read = BUFFER_SIZE;
 	if (s_buf)
@@ -217,9 +219,13 @@ int get_next_line(int fd, char **line)
 
 	while (len_read > 0 && new_line_in_buf == 0)
 	{
+		//printf("!!!!2\n");
 		len_read = read(fd, buf, BUFFER_SIZE);
 		if (len_read < 1)
+		{
+			free(s_buf);
 			return (len_read);
+		}
 		buf[len_read] = '\0';
 		
 		after_new_line = ft_strchr(buf, '\n');
@@ -233,6 +239,8 @@ int get_next_line(int fd, char **line)
 		temp = *line;	
 		*line = ft_strjoin(*line, buf);
 		free(temp);
+		//free(buf);
+		//buf = NULL;
 	}
 	return (1);
 }
