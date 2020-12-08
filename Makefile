@@ -1,7 +1,7 @@
 flag = -Wextra -Werror -Wall
 
 gcc:
-	gcc ${flag} -D BUFFER_SIZE=32 get_next_line.c get_next_line_utils.c main.c
+	gcc ${flag} -D BUFFER_SIZE=32 get_next_line.h get_next_line.c get_next_line_utils.c main.c
 
 gccr:	gcc
 	./a.out fixtures/ex
@@ -27,8 +27,21 @@ gccr6:	gcc
 gccr7:	gcc
 	./a.out fixtures/ex7
 
+gccr8:	gcc
+	./a.out fixtures/ex8
+
 gccrt:	gcc
-	./a.out fixtures/ex fixtures/ex1 fixtures/ex2 fixtures/ex3 fixtures/ex4 fixtures/ex5
+	./a.out \
+	fixtures/ex \
+	fixtures/ex1 \
+	fixtures/ex2 \
+	fixtures/ex3 \
+	fixtures/ex4 \
+	fixtures/ex5 \
+	fixtures/ex6 \
+	fixtures/ex7 \
+	fixtures/ex8 \
+
 
 run:
 	./a.out

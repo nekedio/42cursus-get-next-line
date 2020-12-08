@@ -6,61 +6,13 @@
 /*   By: dxenophi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 18:52:58 by dxenophi          #+#    #+#             */
-/*   Updated: 2020/12/04 20:43:58 by dxenophi         ###   ########.fr       */
+/*   Updated: 2020/12/07 17:58:41 by dxenophi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t		ft_strlen(const char *src)
-{
-	char			*ft_src;
-	size_t			i;
-
-	i = 0;
-	ft_src = (char *)src;
-	while (ft_src[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
-}
-
-static void			*ft_bzero(void *arr, size_t size)
-{
-	size_t			i;
-	unsigned char	*result;
-
-	i = 0;
-	result = (unsigned char *)arr;
-	while (i < size)
-	{
-		result[i] = '\0'; //
-		i++;
-	}
-	return (result);
-}
-
-void		*ft_calloc(size_t count, size_t size)
-{
-	void	*result;
-
-	if (!count || !size)
-	{
-		count = 1;
-		size = 1;
-	}
-	result = (void *)malloc(count * size);
-	if (!result)
-	{
-		return (NULL);
-	}
-	ft_bzero(result, count * size);
-	return (result);
-}
-
-
-size_t		ft_strlcpy(char *dst, const char *src, size_t dstsize)
+size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
 	size_t			len_src;
 	size_t			i;
@@ -76,6 +28,78 @@ size_t		ft_strlcpy(char *dst, const char *src, size_t dstsize)
 		dst[i] = src[i];
 		i++;
 	}
-	dst[i] = '\0'; //
+	dst[i] = '\0';
 	return (len_src);
+}
+
+char				*ft_strchr(const char *str, int chr)
+{
+	char			*ft_str;
+	int				i;
+
+	ft_str = (char *)str;
+	i = 0;
+	while (ft_str[i])
+	{
+		if (ft_str[i] == chr)
+		{
+			return (ft_str + i);
+		}
+		i++;
+	}
+	if (ft_str[i] == '\0' && chr == '\0')
+	{
+		return (ft_str + i);
+	}
+	return (NULL);
+}
+
+size_t				ft_strlen(const char *src)
+{
+	char			*ft_src;
+	size_t			i;
+
+	i = 0;
+	ft_src = (char *)src;
+	while (ft_src[i] != '\0')
+	{
+		i++;
+	}
+	return (i);
+}
+
+static char			*genstr(char *dst, char const *srt, unsigned int *counter)
+{
+	unsigned int	i;
+	unsigned int	j;
+
+	i = 0;
+	j = *counter;
+	while (srt[i])
+	{
+		dst[j] = srt[i];
+		i++;
+		j++;
+	}
+	dst[j] = '\0';
+	*counter = j;
+	return (dst);
+}
+
+char				*ft_strjoin(char const *s_buf, char const *str2)
+{
+	unsigned int	sum_str;
+	char			*result;
+	unsigned int	counter;
+
+	if (!s_buf || !str2)
+		return (NULL);
+	sum_str = ft_strlen(s_buf) + ft_strlen(str2);
+	result = (char *)malloc(sizeof(result) * sum_str + 1);
+	if (!result || !s_buf || !str2)
+		return (NULL);
+	counter = 0;
+	result = genstr(result, s_buf, &counter);
+	result = genstr(result, str2, &counter);
+	return (result);
 }
