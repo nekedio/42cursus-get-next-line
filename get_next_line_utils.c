@@ -6,11 +6,12 @@
 /*   By: dxenophi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 18:52:58 by dxenophi          #+#    #+#             */
-/*   Updated: 2020/12/07 17:58:41 by dxenophi         ###   ########.fr       */
+/*   Updated: 2020/12/08 22:37:15 by dxenophi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {

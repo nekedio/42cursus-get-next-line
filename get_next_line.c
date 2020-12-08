@@ -6,7 +6,7 @@
 /*   By: dxenophi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 18:27:21 by dxenophi          #+#    #+#             */
-/*   Updated: 2020/12/08 17:20:56 by dxenophi         ###   ########.fr       */
+/*   Updated: 2020/12/08 22:42:22 by dxenophi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ static int		processing_s_buf(char **s_buf, char **line)
 	char		*after_new_line;
 
 	if (*s_buf)
-	{
 		if ((after_new_line = ft_strchr(*s_buf, '\n')) != NULL)
 		{
 			*after_new_line = '\0';
@@ -44,10 +43,11 @@ static int		processing_s_buf(char **s_buf, char **line)
 			free(*s_buf);
 			*s_buf = NULL;
 		}
-	}
 	else
 	{
 		*line = (char *)malloc(sizeof(*line) * 1);
+		if (*line == NULL)
+			return (0);
 		*line[0] = '\0';
 	}
 	return (0);
@@ -102,9 +102,15 @@ int				get_next_line(int fd, char **line)
 	int			new_line_in_buf;
 	int			result;
 
-	if (BUFFER_SIZE < 1)
+	if (BUFFER_SIZE < 1 || line == NULL)
+	{
 		return (-1);
+	}
 	new_line_in_buf = processing_s_buf(&s_buf, line);
 	result = ft_read(fd, &s_buf, line, &new_line_in_buf);
+	if (*line == NULL)
+	{
+		return (-1);
+	}
 	return (result);
 }
